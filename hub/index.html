@@ -1,0 +1,546 @@
+<title>Family Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: a calm one-column "kitchen binder" — tab strip on top, one section at a time, biggest thing first. */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --ink:#1d2a24; --muted:#5b6b63; --line:#d7ded8;
+  --pine:#1f5a45; --pine-soft:#e1ece6; --on-pine:#ffffff;
+  --me:#7a4fb3; --me-soft:#efe8f8;
+  --mak:#c0462f; --mak-soft:#fae6e1;
+  --kol:#1f6fb2; --kol-soft:#e2eef9;
+  --fam:#8a6a12; --fam-soft:#f6efd9;
+  --warn:#9a5b00; --warn-soft:#fff1d6; --ok:#2c7a3f;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121815; --surface:#1a221e; --ink:#e7eee9; --muted:#9db0a6; --line:#2e3a34;
+  --pine:#6fc39f; --pine-soft:#1f3229; --on-pine:#0d1a14;
+  --me:#c3a3ee; --me-soft:#2b2338; --mak:#f0937e; --mak-soft:#3a231e;
+  --kol:#87bdf0; --kol-soft:#1d2c3b; --fam:#e0c06a; --fam-soft:#33301f;
+  --warn:#f2b860; --warn-soft:#3a2d17; --ok:#7fd396; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1a221e; --ink:#e7eee9; --muted:#9db0a6; --line:#2e3a34;
+  --pine:#6fc39f; --pine-soft:#1f3229; --on-pine:#0d1a14;
+  --me:#c3a3ee; --me-soft:#2b2338; --mak:#f0937e; --mak-soft:#3a231e;
+  --kol:#87bdf0; --kol-soft:#1d2c3b; --fam:#e0c06a; --fam-soft:#33301f;
+  --warn:#f2b860; --warn-soft:#3a2d17; --ok:#7fd396; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 var(--body);margin:0}
+.wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:1.9rem;font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.35rem;font-weight:800}
+h3{font-size:1.05rem;font-weight:600}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px 16px}
+.date{color:var(--muted)}
+.save{font-size:.85rem;color:var(--muted)}
+nav{display:flex;gap:6px;overflow-x:auto;margin-block:16px;padding-bottom:4px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding-top:6px}
+nav button{font:inherit;font-size:.95rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{background:var(--pine);color:var(--on-pine);border-color:var(--pine)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
+section{display:grid;gap:18px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;min-width:0}
+.hero{background:var(--pine-soft);border-color:transparent}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+ul.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.row .main{flex:1;min-width:0}
+.row .sub{color:var(--muted);font-size:.9rem}
+.row.done .t{text-decoration:line-through;color:var(--muted)}
+.row input[type=checkbox]{width:22px;height:22px;margin-top:2px;accent-color:var(--pine);flex:none}
+.chip{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;vertical-align:middle}
+.who-me{background:var(--me-soft);color:var(--me)} .who-mak{background:var(--mak-soft);color:var(--mak)}
+.who-kol{background:var(--kol-soft);color:var(--kol)} .who-fam{background:var(--fam-soft);color:var(--fam)}
+.pri{background:var(--warn-soft);color:var(--warn)}
+.ex{background:var(--line);color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;margin-top:8px}
+.d-me{background:var(--me)} .d-mak{background:var(--mak)} .d-kol{background:var(--kol)} .d-fam{background:var(--fam)}
+.btn{font:inherit;font-size:.95rem;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;cursor:pointer}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:var(--on-pine);font-weight:700}
+.btn.big{font-size:1.1rem;padding:14px 20px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted);padding:4px 8px}
+form.add{display:flex;flex-wrap:wrap;gap:8px}
+form.add>*{flex:1 1 140px;min-width:0}
+form.add .wide{flex:3 1 240px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+textarea{min-height:320px;font-size:.95rem;line-height:1.5}
+label.f{display:grid;gap:4px;font-size:.9rem;color:var(--muted)}
+.stuck{border:2px dashed var(--pine);border-radius:14px;padding:16px;background:var(--surface)}
+.stuck p{margin:0;font-size:1.2rem}
+.money{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{padding:12px 14px;border-radius:12px;background:var(--pine-soft)}
+.stat b{display:block;font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.85rem;color:var(--muted)}
+.bar{height:14px;border-radius:7px;background:var(--line);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.num{text-align:right;width:130px}
+td.num input{text-align:right}
+.scroll{overflow-x:auto}
+.res{display:grid;gap:10px}
+.res .row{flex-wrap:wrap}
+.res a{color:var(--pine);font-weight:700}
+.tag{font-size:.8rem;color:var(--muted)}
+.note{font-size:.88rem;color:var(--muted);margin:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.status-sel{width:auto;font-size:.85rem;padding:4px 8px}
+@media (prefers-reduced-motion:no-preference){.row{transition:background .2s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 id="hello">Good day, Tabby</h1>
+      <div class="date" id="today"></div>
+    </div>
+    <div class="save" id="save" aria-live="polite">Loading…</div>
+  </header>
+
+  <nav role="tablist" id="tabs"></nav>
+
+  <!-- TODAY -->
+  <section data-tab="today">
+    <div class="panel hero">
+      <h2>Just these three today</h2>
+      <p class="lede">Your most important unfinished tasks. Do the first one. The others can wait.</p>
+      <ul class="list" id="top3"></ul>
+    </div>
+    <div class="stuck" id="stuckBox">
+      <div class="toolbar"><button class="btn primary big" id="stuckBtn">I'm stuck. Give me one small step.</button></div>
+      <p id="stuckOut" hidden></p>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>Coming up (next 7 days)</h3><ul class="list" id="soon"></ul></div>
+      <div class="panel"><h3>Money this month</h3><div id="moneyMini"></div></div>
+    </div>
+  </section>
+
+  <!-- TASKS -->
+  <section data-tab="tasks" hidden>
+    <div class="panel">
+      <h2>To-do list</h2>
+      <p class="lede">Star the urgent ones. Each task has a "first small step" so you never have to figure out where to start.</p>
+      <form class="add" id="taskForm">
+        <input id="taskT" class="wide" placeholder="What needs doing?" required>
+        <input id="taskStep" class="wide" placeholder="First small step (optional)">
+        <select id="taskWho"></select>
+        <button class="btn primary">Add task</button>
+      </form>
+      <ul class="list" id="taskList"></ul>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section data-tab="cal" hidden>
+    <div class="panel">
+      <h2>Appointments &amp; games</h2>
+      <p class="lede">Colors: <span class="chip who-me">Me</span> <span class="chip who-mak">Makenna</span> <span class="chip who-kol">Kolton</span> <span class="chip who-fam">Family</span></p>
+      <form class="add" id="evForm">
+        <input id="evT" class="wide" placeholder="What is it? (e.g. Kolton baseball game)" required>
+        <input id="evDate" type="date" required>
+        <input id="evTime" type="time">
+        <input id="evWhere" placeholder="Where / ride plan">
+        <select id="evWho"></select>
+        <button class="btn primary">Add</button>
+      </form>
+      <ul class="list" id="evList"></ul>
+    </div>
+  </section>
+
+  <!-- MONEY -->
+  <section data-tab="money" hidden>
+    <div class="panel">
+      <h2>Monthly money plan</h2>
+      <div class="money" id="moneyStats"></div>
+      <div class="bar" id="moneyBar" aria-hidden="true"></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Bill</th><th>Due day</th><th class="num">Amount</th><th></th></tr></thead>
+          <tbody id="billRows"></tbody>
+        </table>
+      </div>
+      <form class="add" id="billForm">
+        <input id="billName" class="wide" placeholder="New bill or expense" required>
+        <input id="billAmt" type="number" min="0" step="0.01" placeholder="Amount $">
+        <button class="btn">Add bill</button>
+      </form>
+      <p class="note">Fill in the real amounts once. The plan does the math every month. SNAP ($135) is counted separately because it can only buy food.</p>
+    </div>
+  </section>
+
+  <!-- PAPERS -->
+  <section data-tab="papers" hidden>
+    <div class="panel">
+      <h2>Important papers checklist</h2>
+      <p class="lede">Where each paper lives. Keep originals on your computer in a folder named <b>Family Hub</b>, with copies in Google Drive in the same folder name.</p>
+      <ul class="list" id="docList"></ul>
+      <form class="add" id="docForm">
+        <input id="docName" class="wide" placeholder="Add a paper (e.g. Lease)" required>
+        <select id="docWho"></select>
+        <button class="btn">Add</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- HELP -->
+  <section data-tab="help" hidden>
+    <div class="panel">
+      <h2>Help you may qualify for</h2>
+      <p class="lede">Programs for Washington Parish, Louisiana. Mark each one as you go so you always know where you stand.</p>
+      <div class="toolbar"><label class="f" for="resFilter">Show</label>
+        <select id="resFilter" class="status-sel"><option value="">All</option><option>Home</option><option>Food</option><option>Bills</option><option>Rides</option><option>Kids</option><option>Rights</option></select></div>
+      <div class="res" id="resList"></div>
+      <p class="note">Can't find something? Dial <b>211</b> any time. They connect Louisiana families to local help with rent, utilities, food and rides. In crisis, call or text <b>988</b>.</p>
+    </div>
+  </section>
+
+  <!-- LETTERS -->
+  <section data-tab="letters" hidden>
+    <div class="panel">
+      <h2>Letters, ready to send</h2>
+      <p class="lede">Pick a letter. Your details are already filled in. Fill any [brackets], copy, and paste into an email or print it.</p>
+      <div class="toolbar">
+        <select id="letterPick" class="status-sel" style="font-size:1rem"></select>
+        <button class="btn primary" id="copyLetter">Copy letter</button>
+        <span class="save" id="copyMsg" aria-live="polite"></span>
+      </div>
+      <textarea id="letterText" aria-label="Letter text"></textarea>
+      <p class="note">These are starting drafts. For anything going to court or a hearing, have Southeast Louisiana Legal Services or Disability Rights Louisiana look it over first. Both are free.</p>
+    </div>
+    <div class="panel">
+      <h3>Your details (used in every letter)</h3>
+      <div class="grid2">
+        <label class="f" for="pName">Full legal name<input id="pName"></label>
+        <label class="f" for="pPhone">Phone<input id="pPhone"></label>
+        <label class="f" for="pAddr">Mailing address<input id="pAddr" placeholder="Street, Franklinton, LA 70438"></label>
+        <label class="f" for="pEmail">Email<input id="pEmail"></label>
+      </div>
+      <p class="note">Saved privately to your account only.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const PEOPLE={me:"Me",mak:"Makenna",kol:"Kolton",fam:"Family"};
+const TABS=[["today","Today"],["tasks","To-do"],["cal","Calendar"],["money","Money"],["papers","Papers"],["help","Help"],["letters","Letters"]];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const iso=d=>d.toISOString().slice(0,10);
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+
+const DEFAULT={
+  profile:{name:"Tabby",phone:"",addr:"",email:""},
+  income:2555, snap:135,
+  tasks:[
+    {id:uid(),t:"Fix the license suspension",step:"Find the scanned payment receipts from about 2 years ago and put them in one folder",who:"me",pri:true,done:false},
+    {id:uid(),t:"Get Kolton a psychiatric evaluation",step:"Call the Florida Parishes Human Services Authority (Help tab) and ask for a child intake",who:"kol",pri:true,done:false},
+    {id:uid(),t:"Start the USDA home loan check",step:"Open the USDA eligibility link in the Help tab and type in the address",who:"fam",pri:true,done:false},
+    {id:uid(),t:"Write down mold, bugs and water outages with dates",step:"Take 3 photos today and note the date",who:"fam",pri:false,done:false},
+    {id:uid(),t:"Ask about Medicaid rides to appointments",step:"Call the number on the back of your Medicaid card and ask about non-emergency rides",who:"me",pri:false,done:false}
+  ],
+  events:[
+    {id:uid(),t:"Example: Makenna baseball game",date:addDays(2),time:"17:30",where:"Pine High field. Ask about a ride.",who:"mak",ex:true},
+    {id:uid(),t:"Example: Kolton baseball practice",date:addDays(4),time:"16:00",where:"Pine High",who:"kol",ex:true}
+  ],
+  bills:[
+    {id:uid(),name:"Rent",due:"1",amt:""},{id:uid(),name:"Electricity",due:"",amt:""},
+    {id:uid(),name:"Phone",due:"",amt:""},{id:uid(),name:"Internet",due:"",amt:""},
+    {id:uid(),name:"Trash",due:"",amt:""},{id:uid(),name:"Truck gas",due:"",amt:""}
+  ],
+  docs:[
+    ["Birth certificates (all 3)","fam"],["Social Security cards (all 3)","fam"],["SSDI award letter","me"],
+    ["Dependent benefits letters","fam"],["License payment receipts","me"],["Driver's license / OMV letters","me"],
+    ["Custody papers","fam"],["Lease and landlord messages","fam"],["Photos of mold, bugs, water","fam"],
+    ["Medicaid cards","fam"],["Shunt and neurology records","me"],["Makenna school records","mak"],
+    ["Kolton school records and any IEP/504","kol"],["Kolton doctor and evaluation records","kol"]
+  ].map(([name,who])=>({id:uid(),name,who,st:"need"})),
+  res:{}
+};
+
+const RES=[
+  {id:"usda",cat:"Home",name:"USDA Section 502 Direct Home Loan",why:"Low-income rural buyers can buy a home with no down payment and payment help. Franklinton is a rural area, so this is the main path to a forever home.",url:"https://www.rd.usda.gov/programs-services/single-family-housing-programs/single-family-housing-direct-home-loans"},
+  {id:"lhc",cat:"Home",name:"Louisiana Housing Corporation",why:"State housing help, including first-time homebuyer programs and the energy bill program (LIHEAP).",url:"https://www.lhc.la.gov"},
+  {id:"habitat",cat:"Home",name:"Habitat for Humanity (nearest affiliate)",why:"Builds affordable homes that families buy with an affordable mortgage. Ask which affiliate serves Washington Parish.",url:"https://www.habitat.org/local/affiliate"},
+  {id:"snap",cat:"Food",name:"SNAP benefit review",why:"With SSDI and shelter and utility costs, your SNAP amount may be too low. Ask for a recheck that counts your rent, utilities and medical costs.",url:"https://www.dcfs.la.gov"},
+  {id:"school",cat:"Food",name:"Free school meals",why:"Ask Pine schools whether meals are free for all students or apply for free meals for both kids.",url:""},
+  {id:"liheap",cat:"Bills",name:"LIHEAP energy bill help",why:"Pays part of electric bills. Apply through the local community action agency for Washington Parish.",url:"https://www.lhc.la.gov"},
+  {id:"lifeline",cat:"Bills",name:"Lifeline phone or internet discount",why:"Monthly discount on phone or internet for people on SNAP or Medicaid.",url:"https://www.lifelinesupport.org"},
+  {id:"nemt",cat:"Rides",name:"Medicaid rides to appointments",why:"Free rides to medical appointments for you and the kids. Call the number on your Medicaid health plan card a few days ahead.",url:""},
+  {id:"omv",cat:"Rides",name:"Louisiana OMV license status",why:"Check what the OMV says is unpaid before calling. Have your receipts ready.",url:"https://www.expresslane.org"},
+  {id:"fphsa",cat:"Kids",name:"Florida Parishes Human Services Authority",why:"Public mental health services for Washington Parish, including children. A path to an evaluation for Kolton.",url:"https://www.fphsa.org"},
+  {id:"medicaid",cat:"Kids",name:"Louisiana Medicaid / LaCHIP",why:"Health coverage for the kids, including psychiatric care and therapy.",url:"https://ldh.la.gov/medicaid"},
+  {id:"drla",cat:"Rights",name:"Disability Rights Louisiana",why:"Free advocates for people with disabilities. Help with housing, school (504/IEP) and benefits problems.",url:"https://disabilityrightsla.org"},
+  {id:"slls",cat:"Rights",name:"Southeast Louisiana Legal Services",why:"Free lawyers for housing problems, landlord repairs, custody and benefits. Covers Washington Parish.",url:"https://slls.org"},
+  {id:"211",cat:"Rights",name:"Louisiana 211",why:"Dial 211. One call for local rent, utility, food and ride help.",url:"https://www.211.org"}
+];
+const RES_ST={"":"Not started",look:"Looking into it",applied:"Applied",yes:"Getting it",no:"Not eligible"};
+
+let S=structuredClone(DEFAULT);
+let ref=null, saveTimer=null, saving=false, pending=false;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money=n=>"$"+Math.round(n).toLocaleString();
+const setSave=t=>$("save").textContent=t;
+
+/* ---------- persistence: private db doc, localStorage fallback ---------- */
+function lsGet(){try{return JSON.parse(localStorage.getItem("familyhub")||"null")}catch{return null}}
+function lsSet(){try{localStorage.setItem("familyhub",JSON.stringify(S))}catch{}}
+function persist(){
+  lsSet();
+  if(!ref){setSave("Saved on this device");return}
+  clearTimeout(saveTimer);setSave("Saving…");
+  saveTimer=setTimeout(flush,900);
+}
+async function flush(){
+  if(saving){pending=true;return}
+  saving=true;
+  try{await ref.set({state:JSON.stringify(S),at:Date.now()});setSave("Saved to your account")}
+  catch(e){setSave("Saved on this device only. Account save failed.")}
+  saving=false;
+  if(pending){pending=false;flush()}
+}
+async function connect(){
+  const local=lsGet(); if(local) S={...structuredClone(DEFAULT),...local};
+  render();
+  if(!window.claude?.use){setSave(local?"Saved on this device":"Changes save on this device");return}
+  try{
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    const id=user?await user.id():null;
+    if(!db||!id){setSave("Changes save on this device");return}
+    ref=db.collection("data/users/"+id).doc("hub");
+    const snap=await ref.get();
+    if(snap.exists){try{S={...structuredClone(DEFAULT),...JSON.parse(snap.data().state)};lsSet();render()}catch{}}
+    else await flush();
+    setSave("Saved to your account");
+  }catch{setSave("Changes save on this device")}
+}
+
+/* ---------- rendering ---------- */
+const chip=w=>`<span class="chip who-${w}">${PEOPLE[w]}</span>`;
+function whoOptions(sel){["me","mak","kol","fam"].forEach(w=>{const o=document.createElement("option");o.value=w;o.textContent=PEOPLE[w];sel.append(o)})}
+
+function taskRow(t,compact){
+  return `<li class="row ${t.done?"done":""}">
+    <input type="checkbox" data-act="done" data-id="${t.id}" ${t.done?"checked":""} aria-label="Mark done: ${esc(t.t)}">
+    <div class="main"><div class="t">${esc(t.t)} ${chip(t.who)} ${t.pri?'<span class="chip pri">Urgent</span>':""}</div>
+    ${t.step?`<div class="sub">First step: ${esc(t.step)}</div>`:""}</div>
+    ${compact?"":`<button class="btn ghost" data-act="pri" data-id="${t.id}" aria-label="Toggle urgent">${t.pri?"★":"☆"}</button>
+    <button class="btn ghost" data-act="deltask" data-id="${t.id}" aria-label="Delete task">✕</button>`}</li>`;
+}
+function sortedTasks(){return [...S.tasks].sort((a,b)=>(a.done-b.done)||(b.pri-a.pri))}
+function fmtDate(d,t){const x=new Date(d+"T"+(t||"12:00"));const day=x.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});return t?day+", "+x.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):day}
+function evRow(e){return `<li class="row"><span class="dot d-${e.who}"></span><div class="main">
+  <div>${esc(e.t)} ${chip(e.who)} ${e.ex?'<span class="chip ex">Example</span>':""}</div>
+  <div class="sub">${fmtDate(e.date,e.time)}${e.where?" · "+esc(e.where):""}</div></div>
+  <button class="btn ghost" data-act="delev" data-id="${e.id}" aria-label="Delete">✕</button></li>`}
+function billTotal(){return S.bills.reduce((s,b)=>s+(parseFloat(b.amt)||0),0)}
+
+function render(){
+  const h=new Date().getHours();
+  $("hello").textContent=(h<12?"Good morning":h<17?"Good afternoon":"Good evening")+", "+(S.profile.name.split(" ")[0]||"Tabby");
+  $("today").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+
+  const open=sortedTasks().filter(t=>!t.done);
+  $("top3").innerHTML=open.slice(0,3).map(t=>taskRow(t,true)).join("")||`<li class="row"><div class="main">Everything is done. Rest is allowed.</div></li>`;
+  $("taskList").innerHTML=sortedTasks().map(t=>taskRow(t)).join("");
+
+  const evs=[...S.events].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const today=iso(new Date()), wk=addDays(7);
+  $("evList").innerHTML=evs.filter(e=>e.date>=today).map(evRow).join("")||`<li class="note">No appointments yet. Add the next game or doctor visit above.</li>`;
+  $("soon").innerHTML=evs.filter(e=>e.date>=today&&e.date<=wk).map(evRow).join("")||`<li class="note">Nothing in the next 7 days.</li>`;
+
+  const bills=billTotal(), left=S.income-bills, filled=S.bills.filter(b=>b.amt!=="").length;
+  const core=`<div class="stat"><b>${money(S.income)}</b><span>Comes in (SSDI + kids' benefits)</span></div>
+    <div class="stat"><b>${money(bills)}</b><span>Bills entered (${filled} of ${S.bills.length})</span></div>
+    <div class="stat"><b>${money(left)}</b><span>Left for food, gas, kids</span></div>`;
+  $("moneyStats").innerHTML=core+`<div class="stat"><b>${money(S.snap)}</b><span>SNAP, food only</span></div>`;
+  const pct=Math.min(100,bills/S.income*100);
+  $("moneyBar").innerHTML=`<i style="width:${pct}%;background:var(--warn)"></i><i style="width:${100-pct}%;background:var(--pine)"></i>`;
+  $("moneyMini").innerHTML=`<div class="money">${core}</div>`+
+    (filled<S.bills.length?`<p class="note">${S.bills.length-filled} bill amounts still blank. Fill them in on the Money tab.</p>`:"");
+  $("billRows").innerHTML=S.bills.map(b=>`<tr><td>${esc(b.name)}</td>
+    <td><input aria-label="Due day for ${esc(b.name)}" data-bill="${b.id}" data-f="due" value="${esc(b.due)}" placeholder="e.g. 5" style="max-width:80px"></td>
+    <td class="num"><input aria-label="Amount for ${esc(b.name)}" type="number" min="0" step="0.01" data-bill="${b.id}" data-f="amt" value="${esc(b.amt)}" placeholder="0"></td>
+    <td><button class="btn ghost" data-act="delbill" data-id="${b.id}" aria-label="Delete bill">✕</button></td></tr>`).join("");
+
+  const DST={need:"Need to find",have:"Have original",both:"Original + Drive copy"};
+  $("docList").innerHTML=S.docs.map(d=>`<li class="row"><div class="main"><div>${esc(d.name)} ${chip(d.who)}</div></div>
+    <select class="status-sel" data-doc="${d.id}" aria-label="Status of ${esc(d.name)}">${Object.entries(DST).map(([k,v])=>`<option value="${k}" ${d.st===k?"selected":""}>${v}</option>`).join("")}</select>
+    <button class="btn ghost" data-act="deldoc" data-id="${d.id}" aria-label="Delete">✕</button></li>`).join("");
+
+  const f=$("resFilter").value;
+  $("resList").innerHTML=RES.filter(r=>!f||r.cat===f).map(r=>`<div class="row"><div class="main">
+    <h3>${esc(r.name)} <span class="tag">· ${r.cat}</span></h3><div class="sub">${esc(r.why)}</div>
+    ${r.url?`<a href="${r.url}" target="_blank" rel="noopener">Open website ↗</a>`:""}</div>
+    <select class="status-sel" data-res="${r.id}" aria-label="Status of ${esc(r.name)}">${Object.entries(RES_ST).map(([k,v])=>`<option value="${k}" ${(S.res[r.id]||"")===k?"selected":""}>${v}</option>`).join("")}</select></div>`).join("");
+
+  for(const k of ["name","phone","addr","email"]){const el=$("p"+k[0].toUpperCase()+k.slice(1));if(document.activeElement!==el)el.value=S.profile[k]||""}
+  if(document.activeElement!==$("letterText")) fillLetter();
+}
+
+/* ---------- letters ---------- */
+const LETTERS={
+  omv:["License suspension: request for correction",p=>`${p.name}
+${p.addr||"[Your mailing address]"}
+${p.phone||"[Phone]"} · ${p.email||"[Email]"}
+
+${today()}
+
+Louisiana Office of Motor Vehicles
+[OMV office address]
+
+RE: Request to correct an erroneous suspension
+Driver's license number: [number]
+
+To whom it may concern:
+
+My driver's license shows as suspended. I believe this is an administrative error. I paid the amount owed in full on or about [date of payment], and I have enclosed copies of my payment records.
+
+Please do the following within 30 days:
+1. Review the enclosed proof of payment.
+2. Correct your records and lift the suspension.
+3. Send me written confirmation of my reinstated status and confirm that no reinstatement fee is owed for an error that was not mine.
+
+If you find that anything is still owed, please send me an itemized written statement showing what it is for and how my earlier payment was applied.
+
+I am a person with a disability. I ask that you communicate with me in writing so I have a record I can refer back to.
+
+Thank you,
+
+${p.name}
+
+Enclosures: payment receipts, [other documents]`],
+  landlord:["Landlord: written repair demand",p=>`${p.name}
+${p.addr||"[Rental address]"}
+
+${today()}
+
+To: [Landlord name and address]
+
+RE: Written notice of needed repairs
+
+Dear [Landlord name],
+
+I am giving you written notice of conditions at the home I rent from you that must be repaired:
+
+1. Mold in [rooms]. First reported to you on [date].
+2. Pest infestation ([type]). First reported on [date].
+3. Water service that stops working, most recently on [dates].
+
+These conditions affect the health and safety of my household, which includes two children and a person with serious medical conditions. Under Louisiana law, a landlord must keep a rental home in a condition fit for living and make necessary repairs.
+
+Please complete these repairs within [10] days of this letter and tell me in writing when work will be done. If repairs are not made, I will take the steps the law allows, which may include contacting legal aid and the parish health department.
+
+I have kept dated photos and records of each problem and of my earlier requests.
+
+Sincerely,
+
+${p.name}
+${p.phone||"[Phone]"}`],
+  school:["School: request for a 504 / IEP evaluation for Kolton",p=>`${p.name}
+${p.addr||"[Your mailing address]"}
+${p.phone||"[Phone]"} · ${p.email||"[Email]"}
+
+${today()}
+
+To: Principal and 504/Special Education Coordinator
+Pine High School, Franklinton, LA
+
+RE: Written request to evaluate Kolton Knight (grade [grade])
+
+I am writing to formally request that the school evaluate my son, Kolton Knight, for a Section 504 plan and for special education services under IDEA.
+
+Kolton has difficulty with [focus, organization, emotional regulation, finishing work, etc.]. These challenges affect his learning and his school day. Examples: [examples].
+
+I give consent for the evaluation. Please send me the consent form and the timeline for the evaluation in writing. Please also send me a copy of my parental rights (procedural safeguards).
+
+While the evaluation is underway, I would like to meet to talk about supports that can start now.
+
+Thank you,
+
+${p.name}
+Parent of Kolton Knight`],
+  accommodation:["Any office: disability accommodation request",p=>`${p.name}
+${p.addr||"[Your mailing address]"}
+${p.phone||"[Phone]"} · ${p.email||"[Email]"}
+
+${today()}
+
+To: [Agency or office name]
+
+RE: Request for reasonable accommodation
+
+I am a person with a disability. My conditions affect my memory and my ability to organize and follow multi-step instructions.
+
+Under the Americans with Disabilities Act and Section 504 of the Rehabilitation Act, I am requesting the following accommodations:
+- All requests and deadlines given to me in writing.
+- Extra time to respond to requests for documents.
+- A reminder by phone or text before any appointment or deadline.
+- The option to complete appointments by phone when possible.
+- Permission to bring a support person to meetings.
+
+Please confirm in writing that these accommodations will be provided, or tell me in writing who I should contact to request them.
+
+Thank you,
+
+${p.name}`]
+};
+function today(){return new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})}
+function fillLetter(){const k=$("letterPick").value||"omv";$("letterText").value=LETTERS[k][1]({...S.profile,name:S.profile.name||"[Your full name]"})}
+
+/* ---------- events ---------- */
+function setTab(k){
+  document.querySelectorAll("section[data-tab]").forEach(s=>s.hidden=s.dataset.tab!==k);
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===k));
+  try{localStorage.setItem("familyhub-tab",k)}catch{}
+}
+TABS.forEach(([k,l])=>{const b=document.createElement("button");b.role="tab";b.dataset.k=k;b.textContent=l;b.onclick=()=>setTab(k);$("tabs").append(b)});
+[$("taskWho"),$("evWho"),$("docWho")].forEach(whoOptions);$("docWho").value="fam";
+Object.entries(LETTERS).forEach(([k,[l]])=>{const o=document.createElement("option");o.value=k;o.textContent=l;$("letterPick").append(o)});
+$("evDate").value=addDays(1);
+
+$("taskForm").onsubmit=e=>{e.preventDefault();S.tasks.push({id:uid(),t:$("taskT").value.trim(),step:$("taskStep").value.trim(),who:$("taskWho").value,pri:false,done:false});e.target.reset();render();persist()};
+$("evForm").onsubmit=e=>{e.preventDefault();S.events.push({id:uid(),t:$("evT").value.trim(),date:$("evDate").value,time:$("evTime").value,where:$("evWhere").value.trim(),who:$("evWho").value});e.target.reset();$("evDate").value=addDays(1);render();persist()};
+$("billForm").onsubmit=e=>{e.preventDefault();S.bills.push({id:uid(),name:$("billName").value.trim(),due:"",amt:$("billAmt").value});e.target.reset();render();persist()};
+$("docForm").onsubmit=e=>{e.preventDefault();S.docs.push({id:uid(),name:$("docName").value.trim(),who:$("docWho").value,st:"need"});e.target.reset();$("docWho").value="fam";render();persist()};
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const id=b.dataset.id;
+  const act=b.dataset.act;
+  if(act==="done"){const t=S.tasks.find(x=>x.id===id);t.done=b.checked}
+  else if(act==="pri"){const t=S.tasks.find(x=>x.id===id);t.pri=!t.pri}
+  else if(act==="deltask")S.tasks=S.tasks.filter(x=>x.id!==id);
+  else if(act==="delev")S.events=S.events.filter(x=>x.id!==id);
+  else if(act==="delbill")S.bills=S.bills.filter(x=>x.id!==id);
+  else if(act==="deldoc")S.docs=S.docs.filter(x=>x.id!==id);
+  else return;
+  render();persist();
+});
+document.addEventListener("change",e=>{
+  const el=e.target;
+  if(el.dataset.bill){S.bills.find(b=>b.id===el.dataset.bill)[el.dataset.f]=el.value;render();persist()}
+  else if(el.dataset.doc){S.docs.find(d=>d.id===el.dataset.doc).st=el.value;persist()}
+  else if(el.dataset.res){S.res[el.dataset.res]=el.value;persist()}
+  else if(el.id==="resFilter"||el.id==="letterPick")render();
+});
+for(const k of ["name","phone","addr","email"]){$("p"+k[0].toUpperCase()+k.slice(1)).addEventListener("input",e=>{S.profile[k]=e.target.value;fillLetter();persist()})}
+
+$("stuckBtn").onclick=()=>{
+  const t=sortedTasks().find(x=>!x.done);const out=$("stuckOut");out.hidden=false;
+  out.textContent=t?`Just this: ${t.step||"Open a note and write one sentence about "+t.t.toLowerCase()+"."} That's all. Then take a breath.`:"Nothing is waiting. Drink some water and rest.";
+};
+$("copyLetter").onclick=()=>{
+  const ta=$("letterText");
+  navigator.clipboard.writeText(ta.value).then(()=>$("copyMsg").textContent="Copied. Paste it into an email or a document.")
+  .catch(()=>{ta.focus();ta.select();$("copyMsg").textContent="Text selected. Press Ctrl+C (or Copy) to copy."});
+};
+
+let startTab="today";try{startTab=localStorage.getItem("familyhub-tab")||"today"}catch{}
+const h=location.hash.slice(1);if(TABS.some(([k])=>k===h))startTab=h;
+setTab(startTab);
+connect();
+</script>
