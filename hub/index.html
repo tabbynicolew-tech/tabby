@@ -1,38 +1,41 @@
 <title>Family Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap">
 <style>
-/* Layout: a calm one-column "kitchen binder" — tab strip on top, one section at a time, biggest thing first. */
+/* Layout: a calm one-column "kitchen binder" — tab strip on top, one section at a time, biggest thing first.
+   Look: "A More Stable Tomorrow" style guide (style-guide/index.html) — deep teal, sage, blush, warm beige, terracotta, charcoal. */
 :root{
-  --bg:#f3f5f1; --surface:#ffffff; --ink:#1d2a24; --muted:#5b6b63; --line:#d7ded8;
-  --pine:#1f5a45; --pine-soft:#e1ece6; --on-pine:#ffffff;
-  --me:#7a4fb3; --me-soft:#efe8f8;
-  --mak:#c0462f; --mak-soft:#fae6e1;
-  --kol:#1f6fb2; --kol-soft:#e2eef9;
-  --fam:#8a6a12; --fam-soft:#f6efd9;
-  --warn:#9a5b00; --warn-soft:#fff1d6; --ok:#2c7a3f;
-  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#fcf9f5; --surface:#ffffff; --ink:#2f3e3e; --muted:#5d6966; --line:#eadcd0;
+  --pine:#0e5a5a; --pine-soft:#f6e9df; --on-pine:#ffffff;
+  --me:#0e5a5a; --me-soft:#dcebea;
+  --mak:#9c4a39; --mak-soft:#f6deda;
+  --kol:#4c6844; --kol-soft:#e4ecdf;
+  --fam:#7a5a3a; --fam-soft:#f6e9df;
+  --warn:#9c4a39; --warn-soft:#f8e1db; --ok:#4c6844;
+  --script:"Playlist Script","Great Vibes",cursive;
+  --display:"Montserrat",ui-sans-serif,system-ui,sans-serif;
+  --body:"Montserrat",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121815; --surface:#1a221e; --ink:#e7eee9; --muted:#9db0a6; --line:#2e3a34;
-  --pine:#6fc39f; --pine-soft:#1f3229; --on-pine:#0d1a14;
-  --me:#c3a3ee; --me-soft:#2b2338; --mak:#f0937e; --mak-soft:#3a231e;
-  --kol:#87bdf0; --kol-soft:#1d2c3b; --fam:#e0c06a; --fam-soft:#33301f;
-  --warn:#f2b860; --warn-soft:#3a2d17; --ok:#7fd396; color-scheme:dark}}
+  --bg:#142020; --surface:#1b2a2a; --ink:#ede6df; --muted:#a9b5b1; --line:#2e3f3e;
+  --pine:#6fb7b0; --pine-soft:#1f3434; --on-pine:#0b1a1a;
+  --me:#6fb7b0; --me-soft:#1f3434; --mak:#e8a595; --mak-soft:#3a2622;
+  --kol:#b5c8a9; --kol-soft:#26301f; --fam:#e2c9a6; --fam-soft:#352b20;
+  --warn:#e8a595; --warn-soft:#3a2622; --ok:#b5c8a9; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#121815; --surface:#1a221e; --ink:#e7eee9; --muted:#9db0a6; --line:#2e3a34;
-  --pine:#6fc39f; --pine-soft:#1f3229; --on-pine:#0d1a14;
-  --me:#c3a3ee; --me-soft:#2b2338; --mak:#f0937e; --mak-soft:#3a231e;
-  --kol:#87bdf0; --kol-soft:#1d2c3b; --fam:#e0c06a; --fam-soft:#33301f;
-  --warn:#f2b860; --warn-soft:#3a2d17; --ok:#7fd396; color-scheme:dark}
+  --bg:#142020; --surface:#1b2a2a; --ink:#ede6df; --muted:#a9b5b1; --line:#2e3f3e;
+  --pine:#6fb7b0; --pine-soft:#1f3434; --on-pine:#0b1a1a;
+  --me:#6fb7b0; --me-soft:#1f3434; --mak:#e8a595; --mak-soft:#3a2622;
+  --kol:#b5c8a9; --kol-soft:#26301f; --fam:#e2c9a6; --fam-soft:#352b20;
+  --warn:#e8a595; --warn-soft:#3a2622; --ok:#b5c8a9; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:17px/1.55 var(--body);margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);margin:0}
 .wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
-h1{font-size:1.9rem;font-weight:800;letter-spacing:-.01em}
-h2{font-size:1.35rem;font-weight:800}
-h3{font-size:1.05rem;font-weight:600}
+h1{font-family:var(--script);font-size:2.8rem;font-weight:400;color:var(--pine);line-height:1.1}
+h2{font-size:1.25rem;font-weight:700;color:var(--pine)}
+h3{font-size:1rem;font-weight:600;letter-spacing:.02em}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px 16px}
 .date{color:var(--muted)}
 .save{font-size:.85rem;color:var(--muted)}
@@ -40,7 +43,7 @@ nav{display:flex;gap:6px;overflow-x:auto;margin-block:16px;padding-bottom:4px;po
 nav button{font:inherit;font-size:.95rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
 nav button[aria-selected="true"]{background:var(--pine);color:var(--on-pine);border-color:var(--pine)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
-section{display:grid;gap:18px}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;min-width:0}
 .hero{background:var(--pine-soft);border-color:transparent}
 .lede{color:var(--muted);max-width:62ch;margin:0}
@@ -87,8 +90,12 @@ td.num input{text-align:right}
 .res a{color:var(--pine);font-weight:700}
 .tag{font-size:.8rem;color:var(--muted)}
 .note{font-size:.88rem;color:var(--muted);margin:0}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.status-sel{width:auto;font-size:.85rem;padding:4px 8px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
+.panel>*{min-width:0}
+.status-sel{width:auto;max-width:100%;font-size:.85rem;padding:4px 8px}
+.motto{text-align:center;margin-top:36px;font-family:var(--script);font-size:1.9rem;color:var(--pine)}
+.motto span{color:var(--mak);font-family:var(--body);font-size:1.3rem}
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @media (prefers-reduced-motion:no-preference){.row{transition:background .2s}}
 </style>
 
@@ -223,6 +230,8 @@ td.num input{text-align:right}
       <p class="note">Saved privately to your account only.</p>
     </div>
   </section>
+
+  <p class="motto">Stronger Today, Brighter Tomorrow <span aria-hidden="true">♡</span></p>
 </div>
 
 <script>
@@ -243,7 +252,7 @@ const DEFAULT={
     {id:uid(),t:"Ask about Medicaid rides to appointments",step:"Call the number on the back of your Medicaid card and ask about non-emergency rides",who:"me",pri:false,done:false}
   ],
   events:[
-    {id:uid(),t:"Example: Makenna baseball game",date:addDays(2),time:"17:30",where:"Pine High field. Ask about a ride.",who:"mak",ex:true},
+    {id:uid(),t:"Example: Makenna softball game",date:addDays(2),time:"17:30",where:"Pine High field. Ask about a ride.",who:"mak",ex:true},
     {id:uid(),t:"Example: Kolton baseball practice",date:addDays(4),time:"16:00",where:"Pine High",who:"kol",ex:true}
   ],
   bills:[
